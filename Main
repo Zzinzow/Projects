@@ -1,0 +1,507 @@
+echo "# Projects" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Zzinzow/Projects.git
+git push -u origin main
+
+/* 
+Program Name : Your checking account
+Program Developers : Zack Zinzow
+Program Date : April 29, 2024
+Program Version : v2.4
+Program Description: this program is a banking system that allows the user to make deposits, withdrawals, and view their account balance across three accounts: checking, savings, and a Schwab Investment account as well as an account to keep track of shares bought.
+*/
+
+import java.util.Scanner;
+import java.util.*;
+
+public class Main {
+
+public static void printMenu (String account) {
+  System.out.println();
+
+  System.out.println("a: Check your balance");
+  System.out.println("b: Make a deposit");
+  System.out.println("c: Make a Withdrawal");
+  System.out.println("d: View your previous transaction");
+  System.out.println("e: Calculate interest"); 
+  System.out.println("f: Transfer to another account");
+  System.out.println("g: check total balance");
+  System.out.println("i: Invest in Tesla");
+  System.out.println("q: Quit");
+  System.out.println();
+}
+
+public static void menuSelect (LinkedList<String> transactions, Checking checking, Savings savings, Schwab schwab, Shares shares, Scanner scnr, char input) {
+
+  String transaction = "";
+  char accSelect = 'n';
+  double deposit = 0;
+  double withdrawal = 0;
+  int i = 1;
+  char acc2;
+  double transfer;
+  int sharesToBuy;
+
+  switch(input) {
+    case 'a':
+      
+      System.out.println("\nPlease select an account: " + 
+                         "\nc: checking" +
+                         "\ns: savings" +
+                         "\ni: SCHWAB Investments" +
+                         "\nl: shares");
+      accSelect = scnr.next().charAt(0);
+      
+      if (accSelect == 'c') {
+        
+        System.out.printf("\nYour current balance is: $%.2f\n" , checking.getBalance());
+        transaction = "Checked balance of checking account: $" + checking.getBalance();
+        transactions.add(transaction);  
+        
+      } else if (accSelect == 's') {
+        
+        System.out.printf("\nYour current balance is: $%.2f\n" , savings.getBalance());
+        transaction = "Checked balance of savings account: $" + savings.getBalance();
+        transactions.add(transaction);
+        
+      } else if (accSelect == 'i') {
+        
+        System.out.printf("\nYour current balance is: $%.2f\n" , schwab.getBalance());
+        transaction = "Checked balance of SCHWAB Investment account: $" + schwab.getBalance();
+        transactions.add(transaction);
+        
+      } else if (accSelect == 'l') {
+
+          System.out.printf("\nYour current balance is: $%.2f\n" , shares.getBalance());
+          transaction = "Checked balance of shares account: $" + shares.getBalance();
+          transactions.add(transaction);
+
+        } 
+      else {
+        
+        System.out.println("Invalid input, please try again.");
+        
+      }
+      
+   
+  break;
+    case 'b':
+      
+      System.out.println("Please select an account: " + 
+                         "\nc: checking" +
+                         "\ns: savings" +
+                         "\ni: SCHWAB Investments");
+      accSelect = scnr.next().charAt(0);
+      
+      if (accSelect == 'c') {
+        
+        System.out.println("\nHow much would you like to deposit?");
+        deposit = scnr.nextDouble();
+        checking.makeDeposit(deposit);
+        System.out.printf("\nYour current balance is: $%.2f\n" , checking.getBalance());
+        transaction = "Made deposit to checking account: $" + deposit;
+        transactions.add(transaction);
+        
+      } else if (accSelect == 's') {
+        
+        System.out.println("\nHow much would you like to deposit?");
+        deposit = scnr.nextDouble();
+        savings.makeDeposit(deposit);
+        System.out.printf("\nYour current balance is: $%.2f\n" , savings.getBalance());
+        transaction = "Made deposit to savings account: $" + deposit;
+        transactions.add(transaction);
+        
+      } else if (accSelect == 'i') {
+        
+        System.out.println("\nHow much would you like to deposit?");
+        deposit = scnr.nextDouble();
+        schwab.makeDeposit(deposit);
+        System.out.printf("\nYour current balance is: $%.2f\n" , schwab.getBalance());
+        transaction = "Made deposit to SCHWAB Investment account: $" + deposit;
+        transactions.add(transaction);
+        
+      } else {
+        
+        System.out.println("Invalid input, please try again.");
+        
+      }
+  break;
+
+      
+    case 'c':
+      
+      System.out.println("Please select an account: " + 
+                         "\nc: checking" +
+                         "\ns: savings" +
+                         "\ni: SCHWAB Investments"+
+                           "\nl: sell shares");
+      accSelect = scnr.next().charAt(0);
+      
+      if (accSelect == 'c') {
+        
+        System.out.println("\nHow much would you like to withdraw?");
+        withdrawal = scnr.nextDouble();
+        if (withdrawal > checking.getBalance()) {
+System.out.println("Insufficient funds, please try again.");
+          withdrawal = scnr.nextDouble();
+          
+        } else {
+          
+        checking.makeWithdrawal(withdrawal);
+        System.out.printf("Your current balance is: $%.2f\n" , checking.getBalance());
+        transaction = "Made withdrawal from checking account: $" + withdrawal;
+        transactions.add(transaction);
+        }
+        
+      } else if (accSelect == 's') {
+
+        System.out.println("\nHow much would you like to withdraw?");
+        withdrawal = scnr.nextDouble();
+        
+        if (withdrawal >= 1000) {
+          
+            System.out.println("You cannot withdraw more than $1000 from your savings account. Please select an amount less than $1000");
+          withdrawal = scnr.nextDouble();
+          
+        } else if (withdrawal > savings.getBalance()) {
+          
+System.out.println("Insufficient funds, please try again.");
+          
+        } else {
+          
+        savings.makeWithdrawal(withdrawal);
+        System.out.printf("Your current balance is: $%.2f\n" , savings.getBalance());
+        transaction = "Made withdrawal from savings account: $" + withdrawal;
+        transactions.add(transaction);
+          
+        }
+
+      } else if (accSelect == 'i') {
+        
+        System.out.println("\nHow much would you like to withdraw?");
+        withdrawal = scnr.nextDouble();
+        if (withdrawal > schwab.getBalance()) {
+System.out.println( "Insufficient funds, please try again.");
+        
+        } else {
+          
+        schwab.makeWithdrawal(withdrawal);
+        System.out.printf("Your current balance is: $%.2f\n" , schwab.getBalance());
+        transaction = "Made withdrawal from SCHWAB Investment account: $" + withdrawal;
+        transactions.add(transaction);
+          
+        }  
+      } else if (accSelect == 'l') {
+
+          System.out.println("\nHow many shares would you like to sell (as an Integer)?");
+          int s = scnr.nextInt();
+          if (s > shares.getShares()) {
+             System.out.println("Insufficient shares, please try again.");
+            s = scnr.nextInt();
+
+          } else {
+
+          shares.sellShares(s, schwab);
+          System.out.println("Your current shares amount is: " + shares.getShares());
+          System.out.printf("These shares have been added to your SCHWAB Investments account. Your current balance is: $%.2f\n" , schwab.getBalance());
+          transaction = "sold shares: " + s + " shares of Tesla";
+          transactions.add(transaction);
+          }
+      } 
+  break;
+
+      
+    case 'd':
+      
+    System.out.println("\nPrevious transactions: \n");
+
+    for (String element : transactions) {
+
+      System.out.printf("%d. %s\n\n", i, element);
+      i++;
+    }
+    i = 1;
+
+  break;   
+
+      
+    case 'e':
+      
+      System.out.println("Please select an account: " + 
+                         "\nc: checking" +
+                         "\ns: savings" +
+                         "\ni: SCHWAB Investments"+
+                           "\nl: shares");
+      accSelect = scnr.next().charAt(0);
+      
+      if (accSelect == 'c') {
+        
+        System.out.printf("Your interest is: $%.2f\n", checking.getInterest());
+        checking.makeDeposit(checking.getInterest());
+        System.out.printf("Your current balance is: $%.2f\n" , checking.getBalance());
+        transaction = "Interest added to checking account: $" + String.format("%.2f",         checking.getInterest());
+        transactions.add(transaction);
+        
+      } else if (accSelect == 's') {
+        
+        System.out.printf("Your interest is: $%.2f\n", savings.getInterest());
+        savings.makeDeposit(savings.getInterest());
+        System.out.printf("Your current balance is: $%.2f\n" , savings.getBalance());
+
+        transaction = "Interest added to savings account: $" + String.format("%.2f",         savings.getInterest());
+        transactions.add(transaction);
+
+      } else if (accSelect == 'i') {
+        
+        System.out.printf("Your interest is: $%.2f\n", schwab.getInterest());
+        schwab.makeDeposit(schwab.getInterest());
+        System.out.printf("Your current balance is: $%.2f\n" , schwab.getBalance());
+        transaction = "Interest added to SCHWAB Investment account: $" + String.format("%.2f",         schwab.getInterest());
+        transactions.add(transaction);
+
+      } else if (accSelect == 'l') {
+
+        System.out.printf("Your interest is: $%.2f\n", shares.getInterest());
+        schwab.makeDeposit(shares.getInterest());
+        System.out.printf("Your current balance is: $%.2f\n" , shares.getBalance());
+        transaction = "Interest added to shares account: $" + String.format("%.2f",         shares.getInterest());
+        transactions.add(transaction);
+
+      } else {
+        
+        System.out.println("Invalid input, please try again.");
+
+      }
+  break;
+
+      
+    case 'f':
+      System.out.println("Please select an account: " + 
+                         "\nc: checking" +
+                         "\ns: savings" +
+                         "\ni: SCHWAB Investments");
+      accSelect = scnr.next().charAt(0);
+      
+      if (accSelect == 'c') {
+        
+        System.out.println("You will be transferring from your checking account");
+        System.out.println("Please select an account to transfer to: Savings (s) or SCHWAB Investments (i)");
+        acc2 = scnr.next().charAt(0);
+        
+        if (acc2 == 's') {
+          
+          System.out.println("How much would you like to transfer?");
+          transfer = scnr.nextDouble();
+          if (transfer > checking.getBalance()) {
+            System.out.println("Insufficient funds, please try again.");
+            transfer = scnr.nextDouble();
+          } else {
+          checking.makeWithdrawal(transfer);
+          savings.makeDeposit(transfer);
+          System.out.printf("The transfer was completed successfully. Your current balance is for your checking account is: $%.2f and your savings account is %.2f\n" , checking.getBalance(), savings.getBalance());
+          transaction = "Transferred $" + transfer + " from checking account to savings account";
+          transactions.add(transaction);
+          }
+          
+        } else if (acc2 == 'i') {
+          
+          System.out.println("How much would you like to transfer?");
+          transfer = scnr.nextDouble();
+          if  (transfer > checking.getBalance()) {
+System.out.println("Insufficient funds, please try again.");
+            transfer = scnr.nextDouble();
+          }
+          checking.makeWithdrawal(transfer);
+          schwab.makeDeposit(transfer);
+          System.out.printf("The transfer was completed successfully. Your current balance is for your checking account is: $%.2f and your SCHWAB Investment account is %.2f\n" , checking.getBalance(), schwab.getBalance());
+          transaction = "Transferred $" + transfer + " from checking account to SCHWAB Investment account";
+          transactions.add(transaction);
+        }
+        } else if (accSelect == 's') {
+        System.out.println("You will be transferring from your savings account");
+        System.out.println("Please select an account to transfer to: Checking (c) or SCHWAB Investments (i)");
+        acc2 = scnr.next().charAt(0);
+        if (acc2 == 'c') {
+          
+          System.out.println("How much would you like to transfer?");
+          transfer = scnr.nextDouble();
+          if (transfer > savings.getBalance()) {
+System.out.println( "Insufficient funds, please try again.");
+            transfer = scnr.nextDouble();
+          } else {
+          savings.makeWithdrawal(transfer);
+          checking.makeDeposit(transfer);
+          System.out.printf("The transfer was completed successfully. Your current balance is for your savings account is: $%.2f and your checking account is %.2f\n" , savings.getBalance(), checking.getBalance());
+          transaction = "Transferred $" + transfer + " from savings account to checking account";
+          transactions.add(transaction);
+          }
+        } else if (acc2 == 'i') {
+          
+          System.out.println("How much would you like to transfer?");
+          transfer = scnr.nextDouble();
+          if (transfer > savings.getBalance()) {
+            System.out.println("Insufficient funds, please try again.");
+          } else {
+          savings.makeWithdrawal(transfer);
+          schwab.makeDeposit(transfer);
+          System.out.printf("The transfer was completed successfully. Your current balance for your savings account is: $%.2f and your SCHWAB Investment account is %.2f\n" , savings.getBalance(), schwab.getBalance());
+          transaction = "Transferred $" + transfer + " from savings account to SCHWAB Investment account";
+          transactions.add(transaction);
+        }
+        }
+        
+      } else if (accSelect == 'i') {
+        
+        System.out.println("You will be transferring from your SCHWAB Investment account");
+        System.out.println("Please select an account to transfer to: Checking (c) or Savings (s)");
+        acc2 = scnr.next().charAt(0);
+        
+        if (acc2 == 's') {
+          
+          System.out.println("How much would you like to transfer?");
+          transfer = scnr.nextDouble();
+          if (transfer > schwab.getBalance()) {
+System.out.println("Insufficient funds, please try again.");
+            transfer = scnr.nextDouble();
+          }
+          schwab.makeWithdrawal(transfer);
+          savings.makeDeposit(transfer);
+          System.out.printf("The transfer was completed successfully. Your current balance is for your SCHWAB Investment account is: $%.2f and your savings account is %.2f\n" , schwab.getBalance(), savings.getBalance());
+          transaction = "Transferred $" + transfer + " from SCHWAB Investment account to savings account";
+          transactions.add(transaction);
+          
+        } else if (acc2 == 'c') {
+          
+          System.out.println("How much would you like to transfer?");
+          transfer = scnr.nextDouble();
+          if (transfer > schwab.getBalance()) {
+System.out.println("Insufficient funds, please try again.");
+            transfer = scnr.nextDouble();
+          } else {
+          schwab.makeWithdrawal(transfer);
+          checking.makeDeposit(transfer);
+          System.out.printf("The transfer was completed successfully. Your current balance is for your SCHWAB Investment account is: $%.2f and your checking account is %.2f\n" , schwab.getBalance(), checking.getBalance());
+          transaction = "Transferred $" + transfer + " from SCHWAB Investment account to checking account";
+          transactions.add(transaction);
+          }
+        }
+        }
+
+      break;
+
+      
+    case 'g': 
+      
+      System.out.printf("Your current total balance is: $%.2f\n" , checking.getTotalBalance(checking, savings, schwab, shares));
+      break;
+
+
+    case 'i': 
+      
+      double teslaStockPrice = 168.74;
+      System.out.println("Thank you for choosing to invest with us!" +
+                        "\nCurrently we offer stocks of Tesla at a unit price of $" + teslaStockPrice);
+      System.out.println("\nHow many shares would you like to purchase?");
+      sharesToBuy = scnr.nextInt();
+      System.out.printf(sharesToBuy + " shares of Tesla will cost you $%.2f\n" , (sharesToBuy * teslaStockPrice));
+      if (sharesToBuy * teslaStockPrice > schwab.getBalance()) {
+System.out.println("Insufficient funds, please try again.");
+        sharesToBuy = scnr.nextInt();
+      }
+      System.out.println("Would you like to purchase these shares? (y/n)");
+      char choose;
+      choose = scnr.next().charAt(0);
+      
+      if (choose == 'y') {
+        
+shares.buyShares(sharesToBuy, schwab);
+System.out.printf("Thank you for choosing to invest with Zinzow banking! Your %d" , shares.getShares());
+  
+        System.out.printf(" shares of Tesla have been purchased successfully\nYour new account balance is $%.2f\n", schwab.getBalance());
+
+        shares.makeDeposit(sharesToBuy * teslaStockPrice);
+        transaction = sharesToBuy * teslaStockPrice + " was withdrawn from SCHWAB Investment account to buy TESLA stocks";
+        transactions.add(transaction);
+        
+      } else {
+        System.out.println("Have a nice day!");
+      }
+      break;
+    case 'q':
+      System.out.println("Thank you for using our banking system. Have a nice day!");
+  break;    
+
+      
+  default:
+      
+    System.out.println("Input invalid, please enter a new input\n");
+  break;
+      
+  }
+}
+
+
+  
+  public static void main(String[] args) {
+      Scanner scnr = new Scanner(System.in);
+   
+    char input = 'w';
+    String accountName;
+    double accountBalance;
+    String transaction = "";
+    int i = 1;
+    char choice = 'l';
+    
+    
+accountObject account = new accountObject();
+Checking checking = new Checking();
+Savings savings = new Savings();
+Schwab schwab = new Schwab();
+Shares shares = new Shares();
+    
+    LinkedList<String> transactions = new LinkedList<String>();
+    
+    
+    System.out.println("Create a new account");
+    System.out.println("Enter the account holder's name: ");
+    
+    accountName = scnr.nextLine();
+    
+    account.setAccountName(accountName);
+    checking.setBalance(875);
+    savings.setBalance(10000);
+    checking.setInterestRate(0.02);
+    savings.setInterestRate(0.075);
+    schwab.setBalance(0);
+    schwab.setInterestRate(0.0048);
+    shares.setBalance(0);
+    shares.setInterestRate(0.09);
+
+    System.out.printf("your total balance is %s\n\n", account.getTotalBalance(checking, savings, schwab, shares));
+
+    System.out.println("Welcome " + account.getAccountName() + " to Zinzow banking and investments!");
+    
+    printMenu(accountName);
+    System.out.println("---------------------------------------------------------------------");
+    input = scnr.next().charAt(0);
+    
+  while (input != 'q') {
+    
+    menuSelect(transactions, checking, savings, schwab, shares, scnr, input);
+     System.out.println("---------------------------------------------------------------------");
+    printMenu(accountName);
+     System.out.println("---------------------------------------------------------------------");
+    input = scnr.next().charAt(0);
+    
+  }
+
+    System.out.println("Thank you for using Zinzow banking and investments! Have a nice day");
+    scnr.close();
+          } 
+        }
+      
+
+  
